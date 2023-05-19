@@ -1,0 +1,46 @@
+#include "shell.h"
+
+/**
+ * _getline - reads an entire line of string input
+ * Return: Pointer to the read line
+ */
+char *_getline(void)
+{
+	char *line = NULL;
+	char *buffer = NULL;
+	size_t bufsize = 0;
+	size_t index = 0;
+	int c;
+
+	while ((c = getchar()) != '\n' && c != EOF)
+	{
+		if (index >= bufsize)
+		{
+			bufsize += BUFFER_SIZE;
+			buffer = realloc(buffer, bufsize);
+			if (buffer == NULL)
+			{
+				perror("realloc");
+				exit(EXIT_FAILURE);
+			}
+		}
+		buffer[index++] = c;
+	}
+
+	if (index == 0 && c == EOF)
+	{
+		exit(EXIT_SUCCESS);
+	}
+
+	buffer[index] = '\0';
+	line = strdup(buffer);
+	free(buffer);
+
+	if (line == NULL)
+	{
+		perror("strdup");
+		exit(EXIT_FAILURE);
+	}
+
+	return line;
+}
